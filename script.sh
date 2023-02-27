@@ -1,25 +1,44 @@
 #find agent source files
-find ./javaagent/src/ -type f -name "*.java" > ./javaagent/sources.txt
+cd ./javaagent/src && find ./ -type f -name "*.java" > ./sources.txt
+
+echo "1"
 
 #compile javaagent
-javac -d ./javaagent/out/ @./javaagent/sources.txt
+javac -d ../../javaagent/out/ @./sources.txt
 
+cd ../..
+
+echo "2"
 #find agent compiled files
-find ./javaagent/out/ -type f -name "*.class" > ./javaagent/csources.txt
+cd ./javaagent/out && find ./ -type f -name "*.class" > ../src/csources.txt
+
+cd ../..
+
+echo "3"
 
 #make agent jar
-jar cmf ./javaagent/src/META-INF/MANIFEST.MF ./javaagent/artifact/agent.jar @./javaagent/csources.txt
+cd ./javaagent/out && jar cmf ./../src/META-INF/MANIFEST.MF ../artifact/agent.jar @../src/csources.txt
 
+cd ../..
+
+echo "4"
 # ----------------------#
 
 #find app source files
-find ./test/src/ -type f -name "*.java" > ./test/sources.txt
+cd ./test/src/ && find ./ -type f -name "*.java" > ./sources.txt
 
 #compile app
-javac -d ./test/out -cp ./javaagent/agent/agent.jar @./test/sources.txt
+javac -d ../out  @./sources.txt
+
+echo "5"
 
 #find app compiled files
-find ./test/out/ -type f -name "*.class" > ./test/csources.txt
+cd ../out && find ./ -type f -name "*.class" > ../src/csources.txt
+
+echo "6"
 
 #run test with javaagent jar
-java -cp ./javaagent/artifact/agent.jar -javaagent:./javaagent/artifact/agent.jar @./test/csources.txt
+ls
+java  -javaagent:../../javaagent/artifact/agent.jar com.nsu.test.Main
+
+echo "7"
