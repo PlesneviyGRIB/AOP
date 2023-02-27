@@ -1,0 +1,1 @@
+./test/out/com/nsu/test/Main.class
