@@ -6,10 +6,21 @@ import java.lang.instrument.Instrumentation;
 
 public class Processor {
     public static void premain(String args, Instrumentation inst) {
-        MyClassFileTransformer.init();
 
         inst.addTransformer(new MyClassFileTransformer());
 
-        System.out.println("PREMAIN12");
+        System.out.println(notificator());
+    }
+
+    private static String notificator(){
+        return "\n" +
+                "╭━━━╮╱╱╱╱╱╱╱╱╭╮╱╭━━━╮╱╱╱╱╱╱╱╭╮╱╱╱╱╱╱╭╮\n" +
+                "┃╭━╮┃╱╱╱╱╱╱╱╭╯╰╮┃╭━━╯╱╱╱╱╱╱╱┃┃╱╱╱╱╱╱┃┃\n" +
+                "┃┃╱┃┣━━┳━━┳━╋╮╭╯┃╰━━┳┳━╮╭┳━━┫╰━┳━━┳━╯┃\n" +
+                "┃╰━╯┃╭╮┃┃━┫╭╮┫┃╱┃╭━━╋┫╭╮╋┫━━┫╭╮┃┃━┫╭╮┃\n" +
+                "┃╭━╮┃╰╯┃┃━┫┃┃┃╰╮┃┃╱╱┃┃┃┃┃┣━━┃┃┃┃┃━┫╰╯┃\n" +
+                "╰╯╱╰┻━╮┣━━┻╯╰┻━╯╰╯╱╱╰┻╯╰┻┻━━┻╯╰┻━━┻━━╯\n" +
+                "╱╱╱╱╭━╯┃\n" +
+                "╱╱╱╱╰━━╯";
     }
 }

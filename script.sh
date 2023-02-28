@@ -1,44 +1,35 @@
 #find agent source files
 cd ./javaagent/src && find ./ -type f -name "*.java" > ./sources.txt
 
-echo "1"
-
 #compile javaagent
-javac -d ../../javaagent/out/ @./sources.txt
+javac -cp ../artifact/javassist-3.29.2-GA.jar -d ../out/ @./sources.txt
 
-cd ../..
-
-echo "2"
 #find agent compiled files
-cd ./javaagent/out && find ./ -type f -name "*.class" > ../src/csources.txt
-
-cd ../..
-
-echo "3"
+cd ../out && find ./ -type f -name "*.class" > ./csources.txt
 
 #make agent jar
-cd ./javaagent/out && jar cmf ./../src/META-INF/MANIFEST.MF ../artifact/agent.jar @../src/csources.txt
+jar cmf ./../src/META-INF/MANIFEST.MF ../artifact/agent.jar @./csources.txt
 
-cd ../..
+echo "Java Agent jar successfully build"
 
-echo "4"
 # ----------------------#
 
 #find app source files
-cd ./test/src/ && find ./ -type f -name "*.java" > ./sources.txt
+cd ../../test/src/ && find ./ -type f -name "*.java" > ./sources.txt
 
 #compile app
-javac -d ../out  @./sources.txt
-
-echo "5"
+javac -cp ../../javaagent/artifact/agent.jar -d ../out  @./sources.txt
 
 #find app compiled files
-cd ../out && find ./ -type f -name "*.class" > ../src/csources.txt
+cd ../out && find ./ -type f -name "*.class" > ./csources.txt
 
-echo "6"
+echo "
+████─█─█─█──█────████─████─████────█───█─███─███─█──█──────██─████─█─█─████────████─████─███─█──█─███
+█──█─█─█─██─█────█──█─█──█─█──█────█───█──█───█──█──█───────█─█──█─█─█─█──█────█──█─█────█───██─█──█─
+████─█─█─█─██────████─████─████────█─█─█──█───█──████───────█─████─█─█─████────████─█─██─███─█─██──█─
+█─█──█─█─█──█────█──█─█────█───────█████──█───█──█──█────█──█─█──█─███─█──█────█──█─█──█─█───█──█──█─
+█─█──███─█──█────█──█─█────█────────█─█──███──█──█──█────████─█──█──█──█──█────█──█─████─███─█──█──█─
+"
 
 #run test with javaagent jar
-ls
 java  -javaagent:../../javaagent/artifact/agent.jar com.nsu.test.Main
-
-echo "7"

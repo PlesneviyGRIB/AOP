@@ -1,0 +1,12 @@
+./com/nsu/aop/transformers/MyClassFileTransformer.class
+./com/nsu/aop/enums/AdviceType.class
+./com/nsu/aop/annotations/JoinPoint.class
+./com/nsu/aop/annotations/InnerAspect.class
+./com/nsu/aop/annotations/Aspect.class
+./com/nsu/aop/annotations/Around.class
+./com/nsu/aop/annotations/PointCutPool.class
+./com/nsu/aop/annotations/Advice.class
+./com/nsu/aop/annotations/After.class
+./com/nsu/aop/annotations/Finally.class
+./com/nsu/aop/annotations/Before.class
+./com/nsu/aop/Processor.class
