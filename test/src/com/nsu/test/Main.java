@@ -2,7 +2,9 @@ package com.nsu.test;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world from main app!");
+        new TestClass();
+        new MyPointcuts();
+        System.out.println("Main app return");
     }
 
     public static void methodForTest(){
