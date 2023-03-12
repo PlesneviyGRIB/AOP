@@ -1,48 +1,35 @@
 package com.nsu.aop.javassist;
 
+import javassist.ClassPool;
+
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.net.URL;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ClassNamesFinder {
-    public String[] getClassNames(String dirName) throws Exception {
-        File filesDir = new File(dirName);
-        File[] files = filesDir.listFiles((dir1, name) -> name.endsWith("class"));
-        if (files == null) {
-            System.out.println("No such directory");
-            throw new FileNotFoundException();
+    public String[] getClassNames(String packageName) {
+        ClassPool classPool = ClassPool.getDefault();
+        ClassLoader classLoader = classPool.getClassLoader();
+        InputStream inputStream = classLoader.getResourceAsStream(packageName.replaceAll("[.]", "/"));
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        Class[] classes = bufferedReader.lines().filter(line -> line.endsWith("class")).map(line -> getClassInPackage(line, packageName)).collect(Collectors.toSet()).toArray(Class[]::new);
+        String[] res = new String[classes.length];
+        for (int i = 0; i < classes.length; i++) {
+            res[i] = classes[i].getName();
+            System.out.println("Found class: " + res[i]);
         }
-        if (files.length == 0) {
-            System.out.println("No compiled classes");
-            throw new FileNotFoundException();
-        }
-        System.out.println("Found files: " + Arrays.toString(files));
-        List<String> filenames = new ArrayList<>();
-        for (File file : files) {
-            InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
-            System.out.println(getClassName(inputStream));
-        }
-        return new String[10];
+        System.out.println("Found all classes in " + packageName + " package");
+        System.out.println("===============================================");
+        return res;
     }
 
-    private String getClassName(InputStream is) throws Exception {
-        DataInputStream dis = new DataInputStream(is);
-        dis.readLong(); // skip header and class version
-        int cpcnt = (dis.readShort() & 0xffff) - 1;
-        int[] classes = new int[cpcnt];
-        String[] strings = new String[cpcnt];
-        for (int i = 0; i < cpcnt; i++) {
-            int t = dis.read();
-            if (t == 7) classes[i] = dis.readShort() & 0xffff;
-            else if (t == 1) strings[i] = dis.readUTF();
-            else if (t == 5 || t == 6) {
-                dis.readLong();
-                i++;
-            } else if (t == 8) dis.readShort();
-            else dis.readInt();
+    private Class getClassInPackage(String className, String packageName) {
+        try {
+            return Class.forName(packageName + "." +className.substring(0, className.lastIndexOf('.')));
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
-        dis.readShort(); // skip access flags
-        return strings[classes[(dis.readShort() & 0xffff) - 1] - 1].replace('/', '.');
     }
+
 }

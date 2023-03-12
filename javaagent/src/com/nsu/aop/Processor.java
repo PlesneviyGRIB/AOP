@@ -13,17 +13,11 @@ import java.util.List;
 import java.util.Map;
 
 public class Processor {
-    public static void premain(String args, Instrumentation inst) throws Exception{
-
+    public static void premain(String args, Instrumentation inst) throws Exception {
+        String packageName = "com.nsu.test";
         // Somehow we need to know what methods we should parse for annotations
         // TODO: Think move about how to get classes from assembly
-        String[] classNames = new String[] {
-                "com.nsu.test.Main",
-                "com.nsu.test.MyPointcuts",
-                "com.nsu.test.TestClass"
-        };
-
-        new ClassNamesFinder().getClassNames("../../test/out/com/nsu/test");
+        String[] classNames = new ClassNamesFinder().getClassNames(packageName);
 
         // Contains Info about expression, AdviceType, And method body
         Map<ExpressionWrapper, PointcutBody> map = new JavassistReader(classNames).readClasses();
