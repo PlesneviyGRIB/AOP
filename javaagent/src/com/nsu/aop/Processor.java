@@ -1,10 +1,15 @@
 package com.nsu.aop;
 
+import com.nsu.aop.javassist.ClassNamesFinder;
 import com.nsu.aop.javassist.JavassistReader;
 import com.nsu.aop.models.ExpressionWrapper;
 import com.nsu.aop.models.PointcutBody;
 
+import java.io.*;
 import java.lang.instrument.Instrumentation;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 public class Processor {
@@ -17,6 +22,8 @@ public class Processor {
                 "com.nsu.test.MyPointcuts",
                 "com.nsu.test.TestClass"
         };
+
+        new ClassNamesFinder().getClassNames("../../test/out/com/nsu/test");
 
         // Contains Info about expression, AdviceType, And method body
         Map<ExpressionWrapper, PointcutBody> map = new JavassistReader(classNames).readClasses();
