@@ -29,17 +29,7 @@ import java.util.Map;
 public class Processor {
     public static void premain(String args, Instrumentation inst) throws Exception {
         String packageName = "com.nsu.test";
-
-        /*String[] classNames = new String[]
-        {
-                "com.nsu.test.Main",
-                "com.nsu.test.MyPointcuts",
-                "com.nsu.test.TestClass"
-        };*/
-
         String[] classNames = new ClassNamesFinder().getClassNamesGuava(packageName);
-        //String[] classNames = new ClassNamesFinder().getClassNamesUsingReflections(packageName);
-
         Map<ExpressionWrapper, PointcutBody> map = new JavassistReader(classNames).readClasses();
         inst.addTransformer(new InnerMethodTransformer(map, classNames));
         inst.addTransformer(new Transformer1(map, classNames));
