@@ -20,3 +20,4 @@
 ./com/nsu/aop/utils/Logger.class
 ./com/nsu/aop/utils/LogsPrinter.class
 ./com/nsu/aop/utils/ParseUtils.class
+./com/nsu/aop/Processor$1.class
