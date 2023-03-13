@@ -1,12 +1,7 @@
 package com.nsu.aop.javassist;
 
 import com.google.common.reflect.ClassPath;
-import javassist.ClassPool;
-
 import java.io.*;
-import java.net.URL;
-import java.util.*;
-import java.util.stream.Collectors;
 
 public class ClassNamesFinder {
     public String[] getClassNamesGuava(String packageName) throws IOException {
