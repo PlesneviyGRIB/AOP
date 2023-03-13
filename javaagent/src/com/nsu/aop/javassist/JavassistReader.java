@@ -9,6 +9,8 @@ import javassist.NotFoundException;
 import javassist.bytecode.AnnotationsAttribute;
 import javassist.bytecode.ClassFile;
 import javassist.bytecode.MethodInfo;
+import javassist.bytecode.annotation.Annotation;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -27,10 +29,21 @@ public class JavassistReader {
 
         for (String className : classNames) {
             ClassFile classFile = ClassPool.getDefault().get(className).getClassFile();
-            readClass(classFile);
+
+            AnnotationsAttribute attr = (AnnotationsAttribute) classFile.getAttribute(AnnotationsAttribute.visibleTag);
+
+            if(attr != null && shouldSearchForAdvice(attr.getAnnotations()))
+                readClass(classFile);
         }
 
         return normalizeResultMap(expressionPointcutBodyMap);
+    }
+
+    private boolean shouldSearchForAdvice(Annotation[] annotations){
+        for (Annotation annotation : annotations)
+            if (ParseUtils.typeAnnotationsIsPresent(annotation.toString()))
+                return true;
+        return false;
     }
 
     private Map<ExpressionWrapper, PointcutBody> normalizeResultMap(Map<ExpressionWrapper, PointcutBody> expressionPointcutBodyMap){

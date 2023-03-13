@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
 Created-By: Egor Savchenko
 Premain-Class: com.nsu.aop.Processor
-Class-Path: ./javassist-3.29.2-GA.jar
+Class-Path: ./javassist-3.29.2-GA.jar ./aspectjweaver-1.9.19.jar

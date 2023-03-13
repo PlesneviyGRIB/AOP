@@ -1,0 +1,5 @@
+javaagent/out/
+javaagent/src/sources.txt
+test/out/
+tool/src/sources.txt
+*.class

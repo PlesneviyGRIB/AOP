@@ -15,7 +15,6 @@ public class ParseUtils {
             case "AROUND" -> { return AdviceType.AROUND; }
 
         }
-
         return null;
     }
 
@@ -34,6 +33,22 @@ public class ParseUtils {
         String tmp = annotationString.substring(annotationString.indexOf("\"") + 1, annotationString.length() - 1);
 
         return tmp.substring(0, tmp.indexOf("\""));
+    }
+
+    public static String[] vmClassNamesStyle(String[] classNames){
+        String[] vmClassNames = new String[classNames.length];
+
+        for(int i = 0; i < classNames.length; i++)
+            vmClassNames[i] = classNames[i].replace(".", "/");
+
+        return vmClassNames;
+    }
+
+    public static boolean typeAnnotationsIsPresent(String annotationString){
+        String[] words = annotationString.split("\\.");
+        String annotationName = words[words.length - 1].toUpperCase();
+
+        return annotationName.equals("ASPECT") || annotationName.equals("POINTCUTPOOL");
     }
 
     private static String parseTypeName(String annotationString){

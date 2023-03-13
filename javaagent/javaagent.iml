@@ -8,5 +8,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="javassist-3.29.2-GA" level="project" />
+    <orderEntry type="library" name="aspectjweaver-1.9.19" level="project" />
   </component>
 </module>
