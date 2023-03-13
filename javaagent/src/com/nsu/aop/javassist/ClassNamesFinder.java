@@ -1,5 +1,6 @@
 package com.nsu.aop.javassist;
 
+import com.google.common.reflect.ClassPath;
 import javassist.ClassPool;
 
 import java.io.*;
@@ -28,6 +29,19 @@ public class ClassNamesFinder {
         return res;
     }
 
+    public String[] getClassNamesGuava(String packageName) throws IOException {
+        ClassPath.ClassInfo[] classes = ClassPath.from(ClassLoader.getSystemClassLoader())
+                .getAllClasses()
+                .stream()
+                .filter(clazz -> clazz.getPackageName()
+                        .equalsIgnoreCase(packageName))
+                .toArray(ClassPath.ClassInfo[]::new);
+        String[] classnames = new String[classes.length];
+        for (int i = 0; i < classes.length; i++) {
+            classnames[i] = classes[i].getName();
+        }
+        return classnames;
+    }
     private Class getClassInPackage(String className, String packageName) {
         try {
             return Class.forName(packageName + "." +className.substring(0, className.lastIndexOf('.')));
