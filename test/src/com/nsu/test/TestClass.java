@@ -6,6 +6,14 @@ import com.nsu.aop.annotations.Before;
 
 @Aspect
 public class TestClass {
+    TestClass(){
+        someMethod();
+    }
+
+    public String someMethod(){
+        System.out.println("Checker");
+        return "HELLO WORLD";
+    }
     @Before("MyPointcuts.loggingJoinPoint")
     public void loggingAdvice(){
         System.out.println("-----log-----");

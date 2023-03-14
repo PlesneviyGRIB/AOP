@@ -5,6 +5,7 @@ import com.nsu.aop.models.PointcutBody;
 import com.nsu.aop.utils.ParseUtils;
 import javassist.*;
 
+
 import java.lang.instrument.ClassFileTransformer;
 import java.security.ProtectionDomain;
 import java.util.*;
@@ -39,7 +40,6 @@ public class InnerMethodTransformer implements ClassFileTransformer {
                 String newName = "inner" + previousName.substring(0, 1).toUpperCase(Locale.ROOT) + previousName.substring(1);
                 methods[i].setName(newName);
                 CtMethod newMethod = CtNewMethod.copy(methods[i], previousName, ctClass, null);
-                System.out.println();
                 ctClass.addMethod(newMethod);
                 changeBody(newMethod, newName);
             }

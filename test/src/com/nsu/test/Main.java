@@ -7,10 +7,6 @@ public class Main {
         new TestClass();
         new MyPointcuts();
     }
-    
-    public String someMethod(){
-      return "HELLO WORLD";
-    }
 
     @Around("as")
     public static void methodForTest(){
