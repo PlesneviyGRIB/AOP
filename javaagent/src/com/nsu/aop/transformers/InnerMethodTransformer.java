@@ -26,8 +26,7 @@ public class InnerMethodTransformer implements ClassFileTransformer {
                             ProtectionDomain protectionDomain,
                             byte[] classfileBuffer) {
         if(!classNamesSet.contains(className)) return null;
-
-        System.out.println("TRANSFORMER: " + className);
+        System.out.println("Transforming " + className);
 
         return null;
     }

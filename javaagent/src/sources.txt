@@ -7,8 +7,8 @@
 ./com/nsu/aop/annotations/Aspect.java
 ./com/nsu/aop/annotations/PointCutPool.java
 ./com/nsu/aop/enums/AdviceType.java
-./com/nsu/aop/javassist/ClassNamesFinder.java
 ./com/nsu/aop/javassist/JavassistReader.java
+./com/nsu/aop/javassist/ClassNamesFinder.java
 ./com/nsu/aop/models/ExpressionWrapper.java
 ./com/nsu/aop/models/PointcutBody.java
 ./com/nsu/aop/parser/ClassParser.java
