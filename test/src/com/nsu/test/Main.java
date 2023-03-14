@@ -12,4 +12,5 @@ public class Main {
     public static void methodForTest(){
         System.out.println("methodForTest");
     }
+    
 }
