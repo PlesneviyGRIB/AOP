@@ -1,21 +1,21 @@
 package com.nsu.aop.transformers;
 
-import com.nsu.aop.models.ExpressionWrapper;
-import com.nsu.aop.models.PointcutBody;
 import com.nsu.aop.utils.ParseUtils;
 import javassist.*;
-
-
+import javassist.bytecode.ClassFile;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
 import java.lang.instrument.ClassFileTransformer;
 import java.security.ProtectionDomain;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 public class InnerMethodTransformer implements ClassFileTransformer {
-    private final Map<ExpressionWrapper, PointcutBody> expressionPointcutBodyMap;
+    public static final String METHOD_PREFIX = "inner_";
     private final Set<String> classNamesSet;
-
-    public InnerMethodTransformer(Map<ExpressionWrapper, PointcutBody> expressionPointcutBodyMap, String[] classNames) {
-        this.expressionPointcutBodyMap = expressionPointcutBodyMap;
+    public InnerMethodTransformer(String[] classNames) {
         this.classNamesSet = new HashSet<>(Arrays.asList(ParseUtils.vmClassNamesStyle(classNames)));
     }
 
@@ -26,41 +26,76 @@ public class InnerMethodTransformer implements ClassFileTransformer {
                             ProtectionDomain protectionDomain,
                             byte[] classfileBuffer) {
         if (!classNamesSet.contains(className)) return null;
-        System.out.println("Transforming " + className);
-        ClassPool classPool = ClassPool.getDefault();
+
         try {
-            CtClass ctClass = classPool.get(className.replaceAll("/", "."));
+            ClassPool classPool = ClassPool.getDefault();
+            ClassFile classFile = new ClassFile(new DataInputStream(new ByteArrayInputStream(classfileBuffer)));
+            CtClass ctClass = classPool.makeClass(classFile);
+
             CtMethod[] methods = ctClass.getDeclaredMethods();
-            System.out.println(Arrays.toString(methods));
-            for (int i = 0; i < methods.length; i++) {
-                if (Objects.equals(methods[i].getName(), "main")){
-                    continue;
-                }
-                String previousName = methods[i].getName();
-                String newName = "inner" + previousName.substring(0, 1).toUpperCase(Locale.ROOT) + previousName.substring(1);
-                methods[i].setName(newName);
-                CtMethod newMethod = CtNewMethod.copy(methods[i], previousName, ctClass, null);
+
+            for (CtMethod method : methods) {
+                String previousName = method.getName();
+                String newName = METHOD_PREFIX + previousName;
+                method.setName(newName);
+                CtMethod newMethod = CtNewMethod.copy(method, previousName, ctClass, null);
                 ctClass.addMethod(newMethod);
-                changeBody(newMethod, newName);
+                changeBody(newMethod, newName, ctClass.getName());
             }
-            System.out.println(Arrays.toString(ctClass.getDeclaredMethods()));
-        } catch (NotFoundException e) {
-            System.err.println("Class " + className + "not found");
-            throw new RuntimeException(e);
-        } catch (CannotCompileException e) {
+
+            return ctClass.toBytecode();
+
+        } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException(e);
         }
-        return null;
     }
 
-    private void changeBody(CtMethod method, String name) throws NotFoundException, CannotCompileException {
+    private void changeBody(CtMethod method, String name, String className) throws NotFoundException, CannotCompileException {
         CtClass returnType = method.getReturnType();
-        if (Objects.equals(returnType.getName(), "void")){
-            method.setBody("{ " + name +"(); }");
-        }
-        else{
-            method.setBody("{ return " + name +"(); }");
-        }
+
+        if (Objects.equals(returnType.getName(), "void"))
+            method.setBody("{"
+                    + " " + produceObjectInjection(method, className)
+                    + "}");
+        else
+            method.setBody("{"
+                    + " return " + produceObjectInjection(method, className)
+                    + " }");
+    }
+
+//    private String produceMethodCall(String methodName, CtMethod prevMethod) throws NotFoundException {
+//        StringBuilder stringBuilder = new StringBuilder(methodName);
+//        stringBuilder.append("(");
+//
+//        for(int i = 0; i<prevMethod.getParameterTypes().length; i++)
+//            stringBuilder.append("$").append(i+1).append(",");
+//        if(prevMethod.getParameterTypes().length != 0) stringBuilder.deleteCharAt(stringBuilder.length()-1);
+//
+//        stringBuilder.append(");");
+//
+//        return stringBuilder.toString();
+//    }
+
+    private String produceObjectInjection(CtMethod prevMethod, String className) throws NotFoundException {
+        StringBuilder stringBuilder = new StringBuilder("new com.nsu.aop.models.DynamicMethodInvocation(new Object[]{");
+
+        for(int i = 0; i<prevMethod.getParameterTypes().length; i++)
+            stringBuilder.append("$").append(i+1).append(",");
+        if(prevMethod.getParameterTypes().length != 0) stringBuilder.deleteCharAt(stringBuilder.length()-1);
+
+        stringBuilder.append("},");
+
+        if(!Modifier.isStatic(prevMethod.getModifiers()))
+            stringBuilder.append("this,");
+        else stringBuilder.append("null,");
+
+        stringBuilder.append("\"").append(className).append("\",");
+
+        stringBuilder.append("\"").append(METHOD_PREFIX).append(prevMethod.getName()).append("\"");
+
+        stringBuilder.append(").process();");
+
+        return stringBuilder.toString();
     }
 }
