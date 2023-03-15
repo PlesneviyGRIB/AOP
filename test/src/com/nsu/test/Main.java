@@ -7,7 +7,6 @@ import java.util.Arrays;
 public class Main {
     public static void main(String[] args) {
         new TestClass().someMethod();
-        methodForTest();
     }
 
     public static void methodForTest(){

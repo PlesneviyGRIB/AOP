@@ -64,19 +64,6 @@ public class InnerMethodTransformer implements ClassFileTransformer {
                     + " }");
     }
 
-//    private String produceMethodCall(String methodName, CtMethod prevMethod) throws NotFoundException {
-//        StringBuilder stringBuilder = new StringBuilder(methodName);
-//        stringBuilder.append("(");
-//
-//        for(int i = 0; i<prevMethod.getParameterTypes().length; i++)
-//            stringBuilder.append("$").append(i+1).append(",");
-//        if(prevMethod.getParameterTypes().length != 0) stringBuilder.deleteCharAt(stringBuilder.length()-1);
-//
-//        stringBuilder.append(");");
-//
-//        return stringBuilder.toString();
-//    }
-
     private String produceObjectInjection(CtMethod prevMethod, String className) throws NotFoundException {
         StringBuilder stringBuilder = new StringBuilder("new com.nsu.aop.models.DynamicMethodInvocation(new Object[]{");
 

@@ -1,6 +1,10 @@
 ./com/nsu/aop/javassist/JavassistReader.class
 ./com/nsu/aop/javassist/ClassNamesFinder.class
 ./com/nsu/aop/Processor$1.class
+./com/nsu/aop/interfaces/IMethodInvocation.class
+./com/nsu/aop/interfaces/ProceedingJoinPointObj.class
+./com/nsu/aop/interfaces/MethodInvocation.class
+./com/nsu/aop/myInterfaces/ProceedingJoinPointObj.class
 ./com/nsu/aop/transformers/Transformer1.class
 ./com/nsu/aop/transformers/LogicInjectorTransformer.class
 ./com/nsu/aop/transformers/MyClassFileTransformer.class
@@ -26,5 +30,9 @@
 ./com/nsu/aop/models/DynamicMethodProcessor.class
 ./com/nsu/aop/models/DynamicMethodInvocation.class
 ./com/nsu/aop/models/ExpressionWrapper.class
+./com/nsu/aop/models/MethodInvocation.class
+./com/nsu/aop/models/MethodInvocationImpl.class
 ./com/nsu/aop/models/PointcutBody.class
+./com/nsu/aop/models/AppropriateMethodsInvocations.class
+./com/nsu/aop/models/AppropriateMethodsInvocations$1.class
 ./com/nsu/aop/models/ToolInfo.class

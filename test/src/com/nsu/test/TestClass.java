@@ -1,26 +1,28 @@
-package com.nsu.test;
+    package com.nsu.test;
 
-import com.nsu.aop.annotations.Around;
-import com.nsu.aop.annotations.Aspect;
-import com.nsu.aop.annotations.Before;
+    import com.nsu.aop.annotations.After;
+    import com.nsu.aop.annotations.Aspect;
+    import com.nsu.aop.annotations.Before;
+    import com.nsu.aop.annotations.Finally;
 
-@Aspect
+    @Aspect
 public class TestClass {
     public void someMethod(){
         System.out.println("Some method");
-    }
-
-    public void someMethod1(String str, Integer num){
         System.out.println("Some method1");
+        System.out.println("Some method2");
     }
-
     @Before("MyPointcuts.loggingJoinPoint")
-    public void loggingAdvice(){
-        System.out.println("-----log-----");
+    public static void loggingAdvice(){
+        System.out.println("BEFORE-----log-----");
     }
 
-    @Around("execution(* *(..))")
-    public void loggingAdvice1(){
-        System.out.println("-----log-----");
+    @After("execution(* *someMethod(..))")
+    public static void loggingAdvice2(){
+        System.out.println("AFTER-----log-----");
+    }
+    @Finally("execution(* *someMethod(..))")
+    public static void loggingAdvice3(){
+        System.out.println("FINALLY-----log-----");
     }
 }
