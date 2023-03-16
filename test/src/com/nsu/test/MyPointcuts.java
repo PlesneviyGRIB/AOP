@@ -5,6 +5,6 @@ import com.nsu.aop.annotations.PointCutPool;
 
 @PointCutPool
 public class MyPointcuts{
-    @PointCut("execution(* *(..))")
+    @PointCut("execution(* *someMethod(..))")
     public void loggingJoinPoint(){}
 }

@@ -2,13 +2,13 @@ package com.nsu.test;
 
 import com.nsu.aop.annotations.Around;
 
+import java.util.Arrays;
+
 public class Main {
     public static void main(String[] args) {
-        new TestClass();
-        new MyPointcuts();
+        new TestClass().someMethod();
     }
 
-    @Around("as")
     public static void methodForTest(){
         System.out.println("methodForTest");
     }

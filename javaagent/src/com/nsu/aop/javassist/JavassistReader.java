@@ -76,7 +76,7 @@ public class JavassistReader {
                 if(adviceType != null)
                     expressionPointcutBodyMap.put(
                             expression,
-                            new PointcutBody(adviceType, methodInfo)
+                            new PointcutBody(adviceType, methodInfo, className)
                     );
                 else
                     if(ParseUtils.parsePointcutAnnotation(annotationString))
