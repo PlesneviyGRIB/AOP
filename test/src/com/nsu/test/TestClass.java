@@ -37,7 +37,7 @@ public class TestClass {
         System.out.println("Final time: " + (currentTime-initialTime));
     }
 
-    @Cflow("execution(* *someMethod(..)")
+    @Cflow("execution(* *someMethod(..))")
     public void logginAdvice2(){
         System.out.println("Log CFLOW");
     }
