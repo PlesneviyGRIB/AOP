@@ -3,6 +3,7 @@ package com.nsu.test;
 import com.nsu.aop.annotations.After;
 import com.nsu.aop.annotations.Aspect;
 import com.nsu.aop.annotations.Before;
+import com.nsu.aop.annotations.Cflow;
 
 import java.util.Date;
 
@@ -34,5 +35,10 @@ public class TestClass {
         long currentTime = System.currentTimeMillis();
         System.out.println("DELTA: " + new Date(currentTime));
         System.out.println("Final time: " + (currentTime-initialTime));
+    }
+
+    @Cflow("execution(* *someMethod(..)")
+    public void logginAdvice2(){
+        System.out.println("Log CFLOW");
     }
 }
