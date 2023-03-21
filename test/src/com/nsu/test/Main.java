@@ -6,10 +6,8 @@ import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
-        new TestClass().someMethod();
-    }
-
-    public static void methodForTest(){
-        System.out.println("methodForTest");
+        TestClass.loggingAdvice0();
+        TestClass.someMethod("STRING ARG");
+        TestClass.loggingAdvice1();
     }
 }

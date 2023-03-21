@@ -1,5 +1,9 @@
-javaagent/out/*
+javaagent/out/
 javaagent/src/sources.txt
-test/out/*
-tool/src/sources.txt
+javaagent/javaagent.iml
+
+test/out/
+test/src/sources.txt
+test/test.iml
+
 *.class

@@ -2,7 +2,6 @@ package com.nsu.aop.utils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.MissingResourceException;
 
 public class MethodInvocation {
     public static Object invoke0(Object objRef, Object[] args, String targetClass, String targetMethod) throws ClassNotFoundException, InvocationTargetException, IllegalAccessException, NoSuchMethodException {
