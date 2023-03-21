@@ -78,7 +78,6 @@ public class JavassistReader {
                                 expression,
                                 new PointcutBody(adviceType, methodInfo, className, true)
                         );
-
                     else
                         expressionPointcutBodyMap.put(
                                 expression,
