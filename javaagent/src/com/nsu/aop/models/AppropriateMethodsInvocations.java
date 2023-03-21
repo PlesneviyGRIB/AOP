@@ -6,42 +6,40 @@ import org.aspectj.weaver.tools.PointcutParser;
 import org.aspectj.weaver.tools.PointcutPrimitive;
 
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class AppropriateMethodsInvocations {
     private final List<IMethodInvocation> beforeInv;
     private final List<IMethodInvocation> afterInv;
     private final List<IMethodInvocation> afterThrowingInv;
     private final List<IMethodInvocation> finallyInv;
-    private static final Set<PointcutPrimitive> supportedPointcutKinds;
-    private static final PointcutParser pointcutParser;
-    private static final List<PointcutExpression> expressions = new ArrayList<>();
-    private static final List<Map.Entry<ExpressionWrapper, PointcutBody>> expressionPointcutBody;
+    private final List<PointcutExpression> expressions;
+
+    private static final List<Map.Entry<ExpressionWrapper, PointcutBody>> expressionPointcutBody = new ArrayList<>(ToolInfo.getInstance().getExpressionPointcutBodyMap().entrySet());
     private final Method method;
 
-    static {
-        supportedPointcutKinds = new HashSet<>();
-        supportedPointcutKinds.add(PointcutPrimitive.EXECUTION);
-
-        pointcutParser = PointcutParser.getPointcutParserSupportingSpecifiedPrimitivesAndUsingContextClassloaderForResolution(supportedPointcutKinds);
-
-        expressionPointcutBody = new ArrayList<>(ToolInfo.getInstance().getExpressionPointcutBodyMap().entrySet());
-        expressionPointcutBody.forEach(entry -> expressions.add(pointcutParser.parsePointcutExpression(entry.getKey().getExpression())));
-    }
-
-    public AppropriateMethodsInvocations(Method method) {
+    public AppropriateMethodsInvocations(Method method, PointcutPrimitive pointcutPrimitive) {
         this.beforeInv = new ArrayList<>();
         this.afterInv = new ArrayList<>();
         this.afterThrowingInv = new ArrayList<>();
         this.finallyInv = new ArrayList<>();
         this.method = method;
-        parse();
+        expressions = PointcutParsers.getExpressions();
+        parse(pointcutPrimitive);
     }
 
-    private void parse(){
-        for(int i = 0; i < expressions.size(); i++)
-            if(expressions.get(i).matchesMethodExecution(method).alwaysMatches())
-                addToContext(expressionPointcutBody.get(i));
+    private void parse(PointcutPrimitive pointcutPrimitive){
+        for(int i = 0; i < expressions.size(); i++) {
+            if(pointcutPrimitive.equals(PointcutPrimitive.CALL))
+                if (expressions.get(i).matchesMethodCall(method, method.getClass()).alwaysMatches())
+                    addToContext(expressionPointcutBody.get(i));
+
+            if(pointcutPrimitive.equals(PointcutPrimitive.EXECUTION))
+                if (expressions.get(i).matchesMethodExecution(method).alwaysMatches())
+                    addToContext(expressionPointcutBody.get(i));
+        }
     }
 
     private void addToContext(Map.Entry<ExpressionWrapper, PointcutBody> entry){

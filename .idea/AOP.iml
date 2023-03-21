@@ -6,8 +6,10 @@
       <sourceFolder url="file://$MODULE_DIR$/JavaAgent/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/test/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/tool/src" isTestSource="false" />
-      <excludeFolder url="file://$MODULE_DIR$/javaagent/.idea/shelf" />
       <excludeFolder url="file://$MODULE_DIR$/test/.idea/shelf" />
+      <excludeFolder url="file://$MODULE_DIR$/javaagent/.idea/shelf" />
+      <excludeFolder url="file://$MODULE_DIR$/javaagent/out/com/nsu/aop/interfaces" />
+      <excludeFolder url="file://$MODULE_DIR$/javaagent/out/com/nsu/aop/myInterfaces" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -1,28 +1,38 @@
-    package com.nsu.test;
+package com.nsu.test;
 
-    import com.nsu.aop.annotations.After;
-    import com.nsu.aop.annotations.Aspect;
-    import com.nsu.aop.annotations.Before;
-    import com.nsu.aop.annotations.Finally;
+import com.nsu.aop.annotations.After;
+import com.nsu.aop.annotations.Aspect;
+import com.nsu.aop.annotations.Before;
 
-    @Aspect
+import java.util.Date;
+
+@Aspect
 public class TestClass {
+    private static long initialTime;
+
     public void someMethod(){
         System.out.println("Some method");
-        System.out.println("Some method1");
-        System.out.println("Some method2");
-    }
-    @Before("MyPointcuts.loggingJoinPoint")
-    public static void loggingAdvice(){
-        System.out.println("BEFORE-----log-----");
     }
 
-    @After("execution(* *someMethod(..))")
-    public static void loggingAdvice2(){
-        System.out.println("AFTER-----log-----");
+    public static void someMethod(String str) {
+//        try {
+//            TimeUnit.SECONDS.sleep(1);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
+        System.out.println("Some method with args: " + str);
     }
-    @Finally("execution(* *someMethod(..))")
-    public static void loggingAdvice3(){
-        System.out.println("FINALLY-----log-----");
+
+    @Before("execution(static * *someMethod(String))")
+    public static void loggingAdvice0(){
+        initialTime = System.currentTimeMillis();
+        System.out.println("Initial time: " + new Date(initialTime));
+    }
+
+    @After("execution(static * *someMethod(String))")
+    public static void loggingAdvice1(){
+        long currentTime = System.currentTimeMillis();
+        System.out.println("DELTA: " + new Date(currentTime));
+        System.out.println("Final time: " + (currentTime-initialTime));
     }
 }
