@@ -1,5 +1,6 @@
 package com.nsu.aop.models;
 
+import com.nsu.aop.annotations.Cflow;
 import com.nsu.aop.interfaces.IMethodInvocation;
 import org.aspectj.weaver.tools.PointcutExpression;
 import org.aspectj.weaver.tools.PointcutParser;
@@ -32,13 +33,17 @@ public class AppropriateMethodsInvocations {
 
     private void parse(PointcutPrimitive pointcutPrimitive){
         for(int i = 0; i < expressions.size(); i++) {
-            if(pointcutPrimitive.equals(PointcutPrimitive.CALL))
-                if (expressions.get(i).matchesMethodCall(method, method.getClass()).alwaysMatches())
-                    addToContext(expressionPointcutBody.get(i));
+            if (expressionPointcutBody.get(i).getValue().isCflow()) {
+                System.out.println("CFLOW " + expressions.get(i) + " " + expressionPointcutBody.get(i).getValue().getAdviceType().name());
+            } else {
+                if (pointcutPrimitive.equals(PointcutPrimitive.CALL))
+                    if (expressions.get(i).matchesMethodCall(method, method.getClass()).alwaysMatches())
+                        addToContext(expressionPointcutBody.get(i));
 
-            if(pointcutPrimitive.equals(PointcutPrimitive.EXECUTION))
-                if (expressions.get(i).matchesMethodExecution(method).alwaysMatches())
-                    addToContext(expressionPointcutBody.get(i));
+                if (pointcutPrimitive.equals(PointcutPrimitive.EXECUTION))
+                    if (expressions.get(i).matchesMethodExecution(method).alwaysMatches())
+                        addToContext(expressionPointcutBody.get(i));
+            }
         }
     }
 
