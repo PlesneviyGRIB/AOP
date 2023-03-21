@@ -9,5 +9,6 @@ public class Main {
         TestClass.loggingAdvice0();
         TestClass.someMethod("STRING ARG");
         TestClass.loggingAdvice1();
+        new TestClass().someMethod();
     }
 }

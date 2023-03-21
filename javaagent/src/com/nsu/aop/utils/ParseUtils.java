@@ -13,7 +13,7 @@ public class ParseUtils {
             case "AFTERTHROWING" -> { return AdviceType.AFTERTHROWING; }
             case "FINALLY" -> { return AdviceType.FINALLY; }
             case "AROUND" -> { return AdviceType.AROUND; }
-
+            case "CFLOW" -> {return AdviceType.CFLOW;}
         }
         return null;
     }
