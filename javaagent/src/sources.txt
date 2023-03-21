@@ -16,9 +16,11 @@
 ./com/nsu/aop/utils/ParseUtils.java
 ./com/nsu/aop/utils/LogsPrinter.java
 ./com/nsu/aop/utils/MethodInvocation.java
+./com/nsu/aop/utils/MethodInvocationUtils.java
 ./com/nsu/aop/Processor.java
 ./com/nsu/aop/parser/ClassParser.java
 ./com/nsu/aop/models/AppropriateMethodsInvocations.java
+./com/nsu/aop/models/PointcutParsers.java
 ./com/nsu/aop/models/MethodInvocationImpl.java
 ./com/nsu/aop/models/ToolInfo.java
 ./com/nsu/aop/models/ExpressionWrapper.java
