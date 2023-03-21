@@ -2,6 +2,7 @@ package com.nsu.aop.models;
 
 import com.nsu.aop.interfaces.IMethodInvocation;
 import org.aspectj.weaver.tools.PointcutExpression;
+import org.aspectj.weaver.tools.PointcutParser;
 import org.aspectj.weaver.tools.PointcutPrimitive;
 
 import java.lang.reflect.Method;
@@ -15,7 +16,7 @@ public class AppropriateMethodsInvocations {
     private final List<IMethodInvocation> afterThrowingInv;
     private final List<IMethodInvocation> finallyInv;
     private final List<PointcutExpression> expressions;
-    private boolean isCflow;
+
     private static final List<Map.Entry<ExpressionWrapper, PointcutBody>> expressionPointcutBody = new ArrayList<>(ToolInfo.getInstance().getExpressionPointcutBodyMap().entrySet());
     private final Method method;
 
@@ -31,35 +32,13 @@ public class AppropriateMethodsInvocations {
 
     private void parse(PointcutPrimitive pointcutPrimitive){
         for(int i = 0; i < expressions.size(); i++) {
-            if (pointcutPrimitive.equals(PointcutPrimitive.CALL)) {
-                if(expressionPointcutBody.get(i).getKey().isCflow()) {
-                    if (!ToolInfo.getInstance().getIsCflow()) {
-                        this.isCflow = true;
-                        ToolInfo.getInstance().setIsCflow(true);
-                        ToolInfo.getInstance().setCflowMethodDescriptor(expressionPointcutBody.get(i));
-                    }
-                }
-                else
-                    if (expressions.get(i).matchesMethodCall(method, method.getClass()).alwaysMatches())
-                        addToContext(expressionPointcutBody.get(i));
+            if(pointcutPrimitive.equals(PointcutPrimitive.CALL))
+                if (expressions.get(i).matchesMethodCall(method, method.getClass()).alwaysMatches())
+                    addToContext(expressionPointcutBody.get(i));
 
-                if(ToolInfo.getInstance().getIsCflow()) addToContext(ToolInfo.getInstance().getCflowMethodDescriptor());
-            }
-
-            if (pointcutPrimitive.equals(PointcutPrimitive.EXECUTION)) {
-                if(expressionPointcutBody.get(i).getKey().isCflow()) {
-                    if (!ToolInfo.getInstance().getIsCflow()) {
-                        this.isCflow = true;
-                        ToolInfo.getInstance().setIsCflow(true);
-                        ToolInfo.getInstance().setCflowMethodDescriptor(expressionPointcutBody.get(i));
-                    }
-                }
-                else
-                    if (expressions.get(i).matchesMethodExecution(method).alwaysMatches())
-                        addToContext(expressionPointcutBody.get(i));
-
-                if(ToolInfo.getInstance().getIsCflow()) addToContext(ToolInfo.getInstance().getCflowMethodDescriptor());
-            }
+            if(pointcutPrimitive.equals(PointcutPrimitive.EXECUTION))
+                if (expressions.get(i).matchesMethodExecution(method).alwaysMatches())
+                    addToContext(expressionPointcutBody.get(i));
         }
     }
 
@@ -86,12 +65,5 @@ public class AppropriateMethodsInvocations {
 
     public List<IMethodInvocation> getFinallyInv() {
         return finallyInv;
-    }
-
-    public void releaseCflowFlag(){
-        if(this.isCflow){
-            ToolInfo.getInstance().setCflowMethodDescriptor(null);
-            ToolInfo.getInstance().setIsCflow(false);
-        }
     }
 }

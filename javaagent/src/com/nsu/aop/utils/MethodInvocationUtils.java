@@ -3,9 +3,7 @@ package com.nsu.aop.utils;
 import com.nsu.aop.interfaces.IMethodInvocation;
 import com.nsu.aop.transformers.InnerMethodTransformer;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 
 public class MethodInvocationUtils {
@@ -28,21 +26,24 @@ public class MethodInvocationUtils {
         return null;
     }
 
-    public static Object invoke(Object executionObjectRef, Object[] methodArgs, String targetClass, String targetMethod) throws Exception {
-        switch (methodArgs.length) {
-            case 0 -> {return MethodInvocation.invoke0(executionObjectRef, methodArgs, targetClass, targetMethod);}
-            case 1 -> {return MethodInvocation.invoke1(executionObjectRef, methodArgs, targetClass, targetMethod);}
-            case 2 -> {return MethodInvocation.invoke2(executionObjectRef, methodArgs, targetClass, targetMethod);}
-            case 3 -> {return MethodInvocation.invoke3(executionObjectRef, methodArgs, targetClass, targetMethod);}
-            case 4 -> {return MethodInvocation.invoke4(executionObjectRef, methodArgs, targetClass, targetMethod);}
-            case 5 -> {return MethodInvocation.invoke5(executionObjectRef, methodArgs, targetClass, targetMethod);}
-            default -> { return null; }
+    public static Object invoke(Object executionObjectRef, Object[] methodArgs, String targetClass, String targetMethod){
+        try {
+            switch (methodArgs.length) {
+                case 0 -> {return MethodInvocation.invoke0(executionObjectRef, methodArgs, targetClass, targetMethod);}
+                case 1 -> {return MethodInvocation.invoke1(executionObjectRef, methodArgs, targetClass, targetMethod);}
+                case 2 -> {return MethodInvocation.invoke2(executionObjectRef, methodArgs, targetClass, targetMethod);}
+                case 3 -> {return MethodInvocation.invoke3(executionObjectRef, methodArgs, targetClass, targetMethod);}
+                case 4 -> {return MethodInvocation.invoke4(executionObjectRef, methodArgs, targetClass, targetMethod);}
+                case 5 -> {return MethodInvocation.invoke5(executionObjectRef, methodArgs, targetClass, targetMethod);}
+                default -> { return null; }
+            }
+        } catch (Exception e){
+            System.out.println(e);
         }
+        return null;
     }
 
-    public static void invokeAll(List<IMethodInvocation> methodInvocationQueue) throws Exception{
-        for (IMethodInvocation iMethodInvocation : methodInvocationQueue) {
-            iMethodInvocation.invoke();
-        }
+    public static void invokeAll(List<IMethodInvocation> methodInvocationQueue){
+        methodInvocationQueue.forEach(m -> m.invoke());
     }
 }
