@@ -7,12 +7,14 @@ public class PointcutBody {
     private final AdviceType adviceType;
     private final MethodInfo methodInfo;
 
+    private boolean isCflow;
     private final String className;
 
-    public PointcutBody(AdviceType adviceType, MethodInfo methodInfo, String className){
+    public PointcutBody(AdviceType adviceType, MethodInfo methodInfo, String className, boolean isCflow) {
         this.adviceType = adviceType;
         this.methodInfo = methodInfo;
         this.className = className;
+        this.isCflow = isCflow;
     }
 
     public AdviceType getAdviceType() {
@@ -25,5 +27,9 @@ public class PointcutBody {
 
     public String getClassName() {
         return className;
+    }
+
+    public boolean isCflow() {
+        return isCflow;
     }
 }

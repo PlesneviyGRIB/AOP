@@ -32,58 +32,63 @@ public class JavassistReader {
 
             AnnotationsAttribute attr = (AnnotationsAttribute) classFile.getAttribute(AnnotationsAttribute.visibleTag);
 
-            if(attr != null && shouldSearchForAdvice(attr.getAnnotations()))
+            if (attr != null && shouldSearchForAdvice(attr.getAnnotations()))
                 readClass(classFile);
         }
 
         return normalizeResultMap(expressionPointcutBodyMap);
     }
 
-    private boolean shouldSearchForAdvice(Annotation[] annotations){
+    private boolean shouldSearchForAdvice(Annotation[] annotations) {
         for (Annotation annotation : annotations)
             if (ParseUtils.typeAnnotationsIsPresent(annotation.toString()))
                 return true;
         return false;
     }
 
-    private Map<ExpressionWrapper, PointcutBody> normalizeResultMap(Map<ExpressionWrapper, PointcutBody> expressionPointcutBodyMap){
+    private Map<ExpressionWrapper, PointcutBody> normalizeResultMap(Map<ExpressionWrapper, PointcutBody> expressionPointcutBodyMap) {
         Map<ExpressionWrapper, PointcutBody> result = new HashMap<>();
 
         expressionPointcutBodyMap.forEach((key, value) ->
-            result.put(
-                    methodDeclarationExpressionMap.getOrDefault(key.getExpression(), key),
-                    value
-            ));
+                result.put(
+                        methodDeclarationExpressionMap.getOrDefault(key.getExpression(), key),
+                        value
+                ));
 
         return result;
     }
 
-    private void readClass(ClassFile classFile){
+    private void readClass(ClassFile classFile) {
         List<MethodInfo> methodInfoList = classFile.getMethods();
         methodInfoList.forEach(methodInfo -> readMethod(methodInfo, classFile.getName()));
     }
 
-    private void readMethod(MethodInfo methodInfo, String className){
+    private void readMethod(MethodInfo methodInfo, String className) {
         AnnotationsAttribute attr = (AnnotationsAttribute) methodInfo.getAttribute(AnnotationsAttribute.visibleTag);
 
-        if(attr != null) {
+        if (attr != null) {
             Arrays.asList(attr.getAnnotations()).forEach(annotation -> {
                 String annotationString = annotation.toString();
-
                 AdviceType adviceType = ParseUtils.parseAdviceType(annotationString);
                 ExpressionWrapper expression = new ExpressionWrapper(ParseUtils.parseExpression(annotationString));
 
-                if(adviceType != null)
-                    expressionPointcutBodyMap.put(
-                            expression,
-                            new PointcutBody(adviceType, methodInfo, className)
-                    );
-                else
-                    if(ParseUtils.parsePointcutAnnotation(annotationString))
-                        methodDeclarationExpressionMap.put(
-                                ParseUtils.parseSimpleClassName(className) + "." + methodInfo.getName(),
-                                expression
+                if (adviceType != null)
+                    if (adviceType == AdviceType.CFLOW)
+                        expressionPointcutBodyMap.put(
+                                expression,
+                                new PointcutBody(adviceType, methodInfo, className, true)
                         );
+
+                    else
+                        expressionPointcutBodyMap.put(
+                                expression,
+                                new PointcutBody(adviceType, methodInfo, className, false)
+                        );
+                else if (ParseUtils.parsePointcutAnnotation(annotationString))
+                    methodDeclarationExpressionMap.put(
+                            ParseUtils.parseSimpleClassName(className) + "." + methodInfo.getName(),
+                            expression
+                    );
             });
         }
     }
