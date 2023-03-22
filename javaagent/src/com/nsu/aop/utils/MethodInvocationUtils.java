@@ -5,6 +5,7 @@ import com.nsu.aop.transformers.InnerMethodTransformer;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MethodInvocationUtils {
     public static Method getCurrentMethod(Object[] methodArgs, String targetClass, String targetMethod){
@@ -38,12 +39,17 @@ public class MethodInvocationUtils {
                 default -> { return null; }
             }
         } catch (Exception e){
-            System.out.println(e);
+            e.printStackTrace();
         }
         return null;
     }
 
     public static void invokeAll(List<IMethodInvocation> methodInvocationQueue){
-        methodInvocationQueue.forEach(m -> m.invoke());
+        methodInvocationQueue.forEach(IMethodInvocation::invoke);
+    }
+
+    public static Object invokeAsChain(List<IMethodInvocation> methodInvocationQueue){
+        List<Object> results = methodInvocationQueue.stream().map(IMethodInvocation::invoke).toList();
+        return results.get(results.size()-1);
     }
 }
