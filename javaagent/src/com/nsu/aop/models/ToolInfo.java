@@ -6,9 +6,7 @@ public class ToolInfo {
     private Map<ExpressionWrapper, PointcutBody> expressionPointcutBodyMap;
     private static ToolInfo toolInfo;
 
-    private boolean isCflow = false;
-
-    private Map.Entry<ExpressionWrapper, PointcutBody> cflowMethodDescriptor = null;
+    private boolean isCflow;
 
     public Map<ExpressionWrapper, PointcutBody> getExpressionPointcutBodyMap() {
         return expressionPointcutBodyMap;
@@ -29,13 +27,5 @@ public class ToolInfo {
 
     public void setIsCflow(boolean flag){
         this.isCflow = flag;
-    }
-
-    public void setCflowMethodDescriptor(Map.Entry<ExpressionWrapper, PointcutBody> cflowMethodDescriptor) {
-        this.cflowMethodDescriptor = cflowMethodDescriptor;
-    }
-
-    public Map.Entry<ExpressionWrapper, PointcutBody> getCflowMethodDescriptor() {
-        return cflowMethodDescriptor;
     }
 }

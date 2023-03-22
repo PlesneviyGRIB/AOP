@@ -1,10 +1,10 @@
 package com.nsu.aop.utils;
 
 import com.nsu.aop.enums.AdviceType;
+import com.nsu.aop.models.PointcutBody;
 
 public class ParseUtils {
     public static AdviceType parseAdviceType(String annotationString){
-
         String adviceTypeString = parseTypeName(annotationString);
 
         switch (adviceTypeString){
@@ -13,13 +13,24 @@ public class ParseUtils {
             case "AFTERTHROWING" -> { return AdviceType.AFTERTHROWING; }
             case "FINALLY" -> { return AdviceType.FINALLY; }
             case "AROUND" -> { return AdviceType.AROUND; }
-            case "CFLOW" -> {return AdviceType.CFLOW;}
         }
         return null;
     }
 
     public static boolean parsePointcutAnnotation(String annotationString){
         return parseTypeName(annotationString).equals("POINTCUT");
+    }
+
+    public static boolean parseCflowAnnotation(String annotationString){
+        return parseTypeName(annotationString).equals("CFLOW");
+    }
+
+    public static Boolean parseCflow(String typeName){
+        return typeName.contains("Cflow");
+    }
+
+    public static boolean isNeededMethod(String targetName, String methodName){
+        return targetName.contains(methodName);
     }
 
     public static String parseSimpleClassName(String className){
@@ -29,7 +40,6 @@ public class ParseUtils {
     }
 
     public static String parseExpression(String annotationString){
-
         String tmp = annotationString.substring(annotationString.indexOf("\"") + 1, annotationString.length() - 1);
 
         return tmp.substring(0, tmp.indexOf("\""));

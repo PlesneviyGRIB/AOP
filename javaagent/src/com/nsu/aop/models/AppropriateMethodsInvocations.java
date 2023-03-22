@@ -33,7 +33,7 @@ public class AppropriateMethodsInvocations {
 
     private void parse(PointcutPrimitive pointcutPrimitive){
         for(int i = 0; i < expressions.size(); i++) {
-            if (expressionPointcutBody.get(i).getValue().isCflow()) {
+            if (expressionPointcutBody.get(i).getKey().isCflow()) {
                 System.out.println("CFLOW " + expressions.get(i) + " " + expressionPointcutBody.get(i).getValue().getAdviceType().name());
             } else {
                 if (pointcutPrimitive.equals(PointcutPrimitive.CALL))

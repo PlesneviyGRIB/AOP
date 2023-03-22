@@ -48,13 +48,11 @@ public class JavassistReader {
 
     private Map<ExpressionWrapper, PointcutBody> normalizeResultMap(Map<ExpressionWrapper, PointcutBody> expressionPointcutBodyMap) {
         Map<ExpressionWrapper, PointcutBody> result = new HashMap<>();
-
         expressionPointcutBodyMap.forEach((key, value) ->
                 result.put(
                         methodDeclarationExpressionMap.getOrDefault(key.getExpression(), key),
                         value
                 ));
-
         return result;
     }
 
@@ -65,29 +63,36 @@ public class JavassistReader {
 
     private void readMethod(MethodInfo methodInfo, String className) {
         AnnotationsAttribute attr = (AnnotationsAttribute) methodInfo.getAttribute(AnnotationsAttribute.visibleTag);
-
         if (attr != null) {
             Arrays.asList(attr.getAnnotations()).forEach(annotation -> {
                 String annotationString = annotation.toString();
                 AdviceType adviceType = ParseUtils.parseAdviceType(annotationString);
-                ExpressionWrapper expression = new ExpressionWrapper(ParseUtils.parseExpression(annotationString));
-
+                ExpressionWrapper expression = new ExpressionWrapper(ParseUtils.parseExpression(annotationString), ParseUtils.parseCflow(annotation.getTypeName()));
                 if (adviceType != null)
-                    if (adviceType == AdviceType.CFLOW)
-                        expressionPointcutBodyMap.put(
-                                expression,
-                                new PointcutBody(adviceType, methodInfo, className, true)
-                        );
-                    else
-                        expressionPointcutBodyMap.put(
-                                expression,
-                                new PointcutBody(adviceType, methodInfo, className, false)
-                        );
-                else if (ParseUtils.parsePointcutAnnotation(annotationString))
+                    expressionPointcutBodyMap.put(
+                            expression,
+                            new PointcutBody(adviceType, methodInfo, className)
+                    );
+
+                else if (ParseUtils.parsePointcutAnnotation(annotationString)){
                     methodDeclarationExpressionMap.put(
                             ParseUtils.parseSimpleClassName(className) + "." + methodInfo.getName(),
                             expression
                     );
+                }
+                else if (ParseUtils.parseCflowAnnotation(annotationString)){
+                    AdviceType cflowAdviceType = null;
+                    for (Map.Entry<ExpressionWrapper,PointcutBody> elem: expressionPointcutBodyMap.entrySet()) {
+                        if (ParseUtils.isNeededMethod(annotation.getMemberValue("value").toString(), elem.getValue().getMethodInfo().getName())){
+                            cflowAdviceType = elem.getValue().getAdviceType();
+                        }
+                    }
+                    if (cflowAdviceType!=null){
+                        expressionPointcutBodyMap.put(
+                                expression, new PointcutBody(cflowAdviceType, methodInfo, className)
+                        );
+                    }
+                }
             });
         }
     }
