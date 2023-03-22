@@ -1,9 +1,6 @@
 package com.nsu.test;
 
-import com.nsu.aop.annotations.After;
-import com.nsu.aop.annotations.Aspect;
-import com.nsu.aop.annotations.Before;
-import com.nsu.aop.annotations.Cflow;
+import com.nsu.aop.annotations.*;
 
 import java.util.Date;
 
@@ -37,8 +34,14 @@ public class TestClass {
         System.out.println("Final time: " + (currentTime-initialTime));
     }
 
-    @Cflow("execution(* *someMethod(..))")
-    public void logginAdvice2(){
-        System.out.println("Log CFLOW");
-    }
+    @Before("execution(static * *someMethod(String))")
+    public void cflowCallMethod(){}
+
+    @Cflow("TestClass.cflowCallMethod")
+    public void cflowAnnotation(){
+        initialTime = System.currentTimeMillis();
+        System.out.println("Initial time: " + new Date(initialTime));}
+
+
+
 }

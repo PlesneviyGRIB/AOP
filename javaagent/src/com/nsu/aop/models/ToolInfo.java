@@ -6,6 +6,8 @@ public class ToolInfo {
     private Map<ExpressionWrapper, PointcutBody> expressionPointcutBodyMap;
     private static ToolInfo toolInfo;
 
+    private boolean isCflow;
+
     public Map<ExpressionWrapper, PointcutBody> getExpressionPointcutBodyMap() {
         return expressionPointcutBodyMap;
     }
@@ -18,4 +20,12 @@ public class ToolInfo {
     }
 
     public static ToolInfo getInstance(){ return toolInfo; }
+
+    public boolean getIsCflow() {
+        return isCflow;
+    }
+
+    public void setIsCflow(boolean flag){
+        this.isCflow = flag;
+    }
 }
