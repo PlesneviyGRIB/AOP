@@ -40,7 +40,7 @@ public class InnerMethodTransformer implements ClassFileTransformer {
                 method.setName(newName);
                 CtMethod newMethod = CtNewMethod.copy(method, previousName, ctClass, null);
                 ctClass.addMethod(newMethod);
-                changeBody(newMethod, newName, ctClass.getName());
+                changeBody(newMethod, ctClass.getName());
             }
 
             return ctClass.toBytecode();
@@ -51,16 +51,9 @@ public class InnerMethodTransformer implements ClassFileTransformer {
         }
     }
 
-    private void changeBody(CtMethod method, String name, String className) throws NotFoundException, CannotCompileException {
-        CtClass returnType = method.getReturnType();
-
-        if (Objects.equals(returnType.getName(), "void"))
+    private void changeBody(CtMethod method, String className) throws NotFoundException, CannotCompileException {
             method.setBody("{"
-                    + " " + produceObjectInjection(method, className)
-                    + "}");
-        else
-            method.setBody("{"
-                    + " return " + produceObjectInjection(method, className)
+                    + " return ($r)" + produceObjectInjection(method, className)
                     + " }");
     }
 

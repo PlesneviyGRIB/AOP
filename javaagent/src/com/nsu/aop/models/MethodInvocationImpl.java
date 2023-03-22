@@ -18,7 +18,7 @@ public class MethodInvocationImpl implements IMethodInvocation {
             Method method = ClassLoader.getSystemClassLoader().loadClass(className).getMethod(methodName);
             return method.invoke(null);
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         return null;
     }

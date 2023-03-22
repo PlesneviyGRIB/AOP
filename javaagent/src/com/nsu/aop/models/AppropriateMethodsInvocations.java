@@ -1,8 +1,8 @@
 package com.nsu.aop.models;
 
 import com.nsu.aop.interfaces.IMethodInvocation;
+import com.sun.tools.javac.Main;
 import org.aspectj.weaver.tools.PointcutExpression;
-import org.aspectj.weaver.tools.PointcutParser;
 import org.aspectj.weaver.tools.PointcutPrimitive;
 
 import java.lang.reflect.Method;
@@ -33,7 +33,7 @@ public class AppropriateMethodsInvocations {
     private void parse(PointcutPrimitive pointcutPrimitive){
         for(int i = 0; i < expressions.size(); i++) {
             if(pointcutPrimitive.equals(PointcutPrimitive.CALL))
-                if (expressions.get(i).matchesMethodCall(method, method.getClass()).alwaysMatches())
+                if (expressions.get(i).matchesMethodCall(method, Main.class).alwaysMatches())
                     addToContext(expressionPointcutBody.get(i));
 
             if(pointcutPrimitive.equals(PointcutPrimitive.EXECUTION))

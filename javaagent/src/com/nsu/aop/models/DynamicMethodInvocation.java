@@ -38,12 +38,24 @@ public class DynamicMethodInvocation implements ProceedingJoinPointObj {
         //finally
         MethodInvocationUtils.invokeAll(appropriateMethodsInvocations.getFinallyInv());
 
+
+        AppropriateAroundMethodsInvocations appropriateAroundMethodsInvocations =
+                new AppropriateAroundMethodsInvocations(
+                        MethodInvocationUtils.getCurrentMethod(methodArgs, targetClass, targetMethod),
+                        PointcutPrimitive.EXECUTION,
+                        this
+                );
+
         try{
-            result = invoke(methodArgs);
+            // Around EXECUTION
+            if(appropriateAroundMethodsInvocations.getAroundInv().size() > 0)
+                result = MethodInvocationUtils.invokeAsChain(appropriateAroundMethodsInvocations.getAroundInv());
+            else
+                result = invoke(methodArgs);
+
         } catch (Exception e){
             e.printStackTrace();
         }
-
         return result;
     }
 
