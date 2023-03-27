@@ -1,5 +1,5 @@
 package com.nsu.aop.interfaces;
 
 public interface IMethodInvocation {
-    Object invoke();
+    Object invoke() throws Exception;
 }
