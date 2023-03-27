@@ -40,8 +40,7 @@ public class TestClass {
     @Cflow("TestClass.cflowCallMethod")
     public void cflowAnnotation(){
         initialTime = System.currentTimeMillis();
-        System.out.println("Initial time: " + new Date(initialTime));}
-
-
+        System.out.println("Initial time: " + new Date(initialTime));
+    }
 
 }

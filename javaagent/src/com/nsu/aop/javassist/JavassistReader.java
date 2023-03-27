@@ -85,12 +85,13 @@ public class JavassistReader {
                     for (Map.Entry<ExpressionWrapper,PointcutBody> elem: expressionPointcutBodyMap.entrySet()) {
                         if (ParseUtils.isNeededMethod(annotation.getMemberValue("value").toString(), elem.getValue().getMethodInfo().getName())){
                             cflowAdviceType = elem.getValue().getAdviceType();
+                            System.out.println("CAUGHT CFLOW " + elem.getValue().getMethodInfo().getName());
                         }
                     }
                     if (cflowAdviceType!=null){
-                        expressionPointcutBodyMap.put(
+                        /*(expressionPointcutBodyMap.put(
                                 expression, new PointcutBody(cflowAdviceType, methodInfo, className)
-                        );
+                        );*/
                     }
                 }
             });

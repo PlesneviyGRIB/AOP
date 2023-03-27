@@ -1,3 +1,2 @@
 ./com/nsu/test/Main.class
-./com/nsu/test/MyPointcuts.class
 ./com/nsu/test/TestClass.class
