@@ -1,6 +1,6 @@
 ./com/nsu/aop/javassist/JavassistReader.java
 ./com/nsu/aop/javassist/ClassNamesFinder.java
-./com/nsu/aop/interfaces/ProceedingJoinPointObj.java
+./com/nsu/aop/interfaces/ProceedingJoinPoint.java
 ./com/nsu/aop/interfaces/IMethodInvocation.java
 ./com/nsu/aop/transformers/InnerMethodTransformer.java
 ./com/nsu/aop/enums/AdviceType.java
@@ -11,6 +11,7 @@
 ./com/nsu/aop/annotations/Around.java
 ./com/nsu/aop/annotations/PointCut.java
 ./com/nsu/aop/annotations/Before.java
+./com/nsu/aop/annotations/AfterThrowing.java
 ./com/nsu/aop/annotations/After.java
 ./com/nsu/aop/utils/Logger.java
 ./com/nsu/aop/utils/ParseUtils.java

@@ -13,14 +13,9 @@ public class MethodInvocationImpl implements IMethodInvocation {
     }
 
     @Override
-    public Object invoke() {
-        try {
-            Method method = ClassLoader.getSystemClassLoader().loadClass(className).getMethod(methodName);
-            return method.invoke(null);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+    public Object invoke() throws Exception {
+        Method method = ClassLoader.getSystemClassLoader().loadClass(className).getMethod(methodName);
+        return method.invoke(null);
     }
 }
 

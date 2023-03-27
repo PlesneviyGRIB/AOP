@@ -1,6 +1,10 @@
 package com.nsu.aop.utils;
 
 import com.nsu.aop.enums.AdviceType;
+import javassist.bytecode.AnnotationsAttribute;
+import javassist.bytecode.MethodInfo;
+
+import java.util.Arrays;
 
 public class ParseUtils {
     public static AdviceType parseAdviceType(String annotationString){
@@ -13,9 +17,20 @@ public class ParseUtils {
             case "AFTERTHROWING" -> { return AdviceType.AFTERTHROWING; }
             case "FINALLY" -> { return AdviceType.FINALLY; }
             case "AROUND" -> { return AdviceType.AROUND; }
-
         }
         return null;
+    }
+
+    public static boolean isAdviceBody(MethodInfo methodInfo){
+        if(methodInfo == null) return false;
+
+        AnnotationsAttribute attr = (AnnotationsAttribute) methodInfo.getAttribute(AnnotationsAttribute.visibleTag);
+
+        if(attr != null) {
+            return Arrays.stream(attr.getAnnotations())
+                    .anyMatch(annotation -> parseAdviceType(annotation.toString()) != null);
+        }
+        return false;
     }
 
     public static boolean parsePointcutAnnotation(String annotationString){

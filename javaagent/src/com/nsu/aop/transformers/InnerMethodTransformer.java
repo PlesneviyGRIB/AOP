@@ -3,14 +3,13 @@ package com.nsu.aop.transformers;
 import com.nsu.aop.utils.ParseUtils;
 import javassist.*;
 import javassist.bytecode.ClassFile;
+import javassist.bytecode.MethodInfo;
+
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.lang.instrument.ClassFileTransformer;
 import java.security.ProtectionDomain;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class InnerMethodTransformer implements ClassFileTransformer {
     public static final String METHOD_PREFIX = "inner_";
@@ -33,8 +32,11 @@ public class InnerMethodTransformer implements ClassFileTransformer {
             CtClass ctClass = classPool.makeClass(classFile);
 
             CtMethod[] methods = ctClass.getDeclaredMethods();
+            List<MethodInfo> methodInfos = classFile.getMethods();
 
             for (CtMethod method : methods) {
+                if(ParseUtils.isAdviceBody(method.getMethodInfo())) continue;
+
                 String previousName = method.getName();
                 String newName = METHOD_PREFIX + previousName;
                 method.setName(newName);
@@ -52,9 +54,9 @@ public class InnerMethodTransformer implements ClassFileTransformer {
     }
 
     private void changeBody(CtMethod method, String className) throws NotFoundException, CannotCompileException {
-            method.setBody("{"
-                    + " return ($r)" + produceObjectInjection(method, className)
-                    + " }");
+        method.setBody("{"
+                + " return ($r)" + produceObjectInjection(method, className)
+                + " }");
     }
 
     private String produceObjectInjection(CtMethod prevMethod, String className) throws NotFoundException {

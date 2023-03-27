@@ -1,26 +1,31 @@
 package com.nsu.aop.models;
 
-import com.nsu.aop.interfaces.ProceedingJoinPointObj;
+import com.nsu.aop.interfaces.IMethodInvocation;
+import com.nsu.aop.interfaces.ProceedingJoinPoint;
 import com.nsu.aop.utils.MethodInvocationUtils;
 import org.aspectj.weaver.tools.PointcutPrimitive;
+
+import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Map;
 
-public class DynamicMethodInvocation implements ProceedingJoinPointObj {
+public class DynamicMethodInvocation implements ProceedingJoinPoint {
     private final String targetClass;
     private final String targetMethod;
-    private final Object[] methodArgs;
-    private final Object executionObjectRef;
-    private final Map<ExpressionWrapper, PointcutBody> expressionPointcutBodyMap = ToolInfo.getInstance().getExpressionPointcutBodyMap();
+    private Object[] methodArgs;
+    private final Object executedObjectRef;
+
+    private List<IMethodInvocation> aroundAdvicesChain;
+    private int aroundAdvicesCounter = -1;
 
     public DynamicMethodInvocation(Object[] methodArgs, Object object, String className, String methodName) {
         this.methodArgs = methodArgs;
-        this.executionObjectRef = object;
+        this.executedObjectRef = object;
         this.targetClass = className;
         this.targetMethod = methodName;
     }
 
-    //CALL
-    public Object process(){
+    public Object process() throws Exception{
         AppropriateMethodsInvocations appropriateMethodsInvocations =
                 new AppropriateMethodsInvocations(
                         MethodInvocationUtils.getCurrentMethod(methodArgs, targetClass, targetMethod),
@@ -28,17 +33,26 @@ public class DynamicMethodInvocation implements ProceedingJoinPointObj {
                 );
 
         Object result = null;
+        Exception exception = null;
 
-        //before
         MethodInvocationUtils.invokeAll(appropriateMethodsInvocations.getBeforeInv());
-        //after
-        MethodInvocationUtils.invokeAll(appropriateMethodsInvocations.getAfterInv());
-        //afterThrowing
-        MethodInvocationUtils.invokeAll(appropriateMethodsInvocations.getAfterThrowingInv());
-        //finally
+
+        try{
+            result = around();
+
+            MethodInvocationUtils.invokeAll(appropriateMethodsInvocations.getAfterInv());
+        } catch (Exception e){
+            MethodInvocationUtils.invokeAll(appropriateMethodsInvocations.getAfterThrowingInv());
+            exception = e;
+        }
         MethodInvocationUtils.invokeAll(appropriateMethodsInvocations.getFinallyInv());
 
+        if(exception != null) throw exception;
 
+        return result;
+    }
+
+    private Object around() throws Exception {
         AppropriateAroundMethodsInvocations appropriateAroundMethodsInvocations =
                 new AppropriateAroundMethodsInvocations(
                         MethodInvocationUtils.getCurrentMethod(methodArgs, targetClass, targetMethod),
@@ -46,22 +60,23 @@ public class DynamicMethodInvocation implements ProceedingJoinPointObj {
                         this
                 );
 
-        try{
-            // Around EXECUTION
-            if(appropriateAroundMethodsInvocations.getAroundInv().size() > 0)
-                result = MethodInvocationUtils.invokeAsChain(appropriateAroundMethodsInvocations.getAroundInv());
-            else
-                result = invoke(methodArgs);
+        this.aroundAdvicesChain = appropriateAroundMethodsInvocations.getAroundInv();
+        this.aroundAdvicesCounter = 0;
 
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-        return result;
+        return invoke(methodArgs);
     }
 
-    //EXECUTION
     @Override
     public Object invoke(Object[] methodArgs) throws Exception {
+        this.methodArgs = methodArgs;
+
+        if(aroundAdvicesChain.size() > aroundAdvicesCounter)
+                return aroundAdvicesChain.get(aroundAdvicesCounter++).invoke();
+
+        return execution(methodArgs);
+    }
+
+    private Object execution(Object[] methodArgs) throws Exception {
         AppropriateMethodsInvocations appropriateMethodsInvocations =
                 new AppropriateMethodsInvocations(
                         MethodInvocationUtils.getCurrentMethod(methodArgs, targetClass, targetMethod),
@@ -71,19 +86,15 @@ public class DynamicMethodInvocation implements ProceedingJoinPointObj {
         Object result = null;
         Exception exception = null;
 
-        //before
         MethodInvocationUtils.invokeAll(appropriateMethodsInvocations.getBeforeInv());
         try{
-            //method invocation
-            result = MethodInvocationUtils.invoke(executionObjectRef, methodArgs, targetClass, targetMethod);
-            //after
+            result = MethodInvocationUtils.invoke(executedObjectRef, methodArgs, targetClass, targetMethod);
+
             MethodInvocationUtils.invokeAll(appropriateMethodsInvocations.getAfterInv());
         } catch (Exception e){
-            //afterThrowing
             MethodInvocationUtils.invokeAll(appropriateMethodsInvocations.getAfterThrowingInv());
             exception = e;
         }
-        //finally
         MethodInvocationUtils.invokeAll(appropriateMethodsInvocations.getFinallyInv());
 
         if(exception != null) throw exception;
@@ -97,7 +108,17 @@ public class DynamicMethodInvocation implements ProceedingJoinPointObj {
     }
 
     @Override
-    public Object invoke() throws Exception{
+    public Object invoke() throws Exception {
         return invoke(methodArgs);
+    }
+
+    @Override
+    public Object getExecutedObject() {
+        return executedObjectRef;
+    }
+
+    @Override
+    public Method getCurrentMethod(){
+        return MethodInvocationUtils.getCurrentMethod(methodArgs, targetClass, targetMethod);
     }
 }
