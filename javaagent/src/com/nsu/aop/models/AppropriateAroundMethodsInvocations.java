@@ -2,7 +2,7 @@ package com.nsu.aop.models;
 
 import com.nsu.aop.enums.AdviceType;
 import com.nsu.aop.interfaces.IMethodInvocation;
-import com.nsu.aop.interfaces.ProceedingJoinPointObj;
+import com.nsu.aop.interfaces.ProceedingJoinPoint;
 import org.aspectj.weaver.tools.PointcutExpression;
 import org.aspectj.weaver.tools.PointcutPrimitive;
 
@@ -17,9 +17,9 @@ public class AppropriateAroundMethodsInvocations {
     private final List<PointcutExpression> expressions;
     private static final List<Map.Entry<ExpressionWrapper, PointcutBody>> expressionPointcutBody = new ArrayList<>(ToolInfo.getInstance().getExpressionPointcutBodyMap().entrySet());
     private final Method method;
-    private final ProceedingJoinPointObj proceedingJoinPoint;
+    private final ProceedingJoinPoint proceedingJoinPoint;
 
-    public AppropriateAroundMethodsInvocations(Method method, PointcutPrimitive pointcutPrimitive, ProceedingJoinPointObj proceedingJoinPoint) {
+    public AppropriateAroundMethodsInvocations(Method method, PointcutPrimitive pointcutPrimitive, ProceedingJoinPoint proceedingJoinPoint) {
         this.aroundInv = new ArrayList<>();
         this.method = method;
         expressions = PointcutParsers.getExpressions();
@@ -29,11 +29,9 @@ public class AppropriateAroundMethodsInvocations {
 
     private void parse(PointcutPrimitive pointcutPrimitive){
         for(int i = 0; i < expressions.size(); i++) {
-            if(pointcutPrimitive.equals(PointcutPrimitive.CALL)) {
-                if (expressions.get(i).matchesMethodCall(method, method.getClass()).alwaysMatches()) {
+            if(pointcutPrimitive.equals(PointcutPrimitive.CALL))
+                if (expressions.get(i).matchesMethodCall(method, method.getClass()).alwaysMatches())
                     addToContext(expressionPointcutBody.get(i));
-                }
-            }
 
             if(pointcutPrimitive.equals(PointcutPrimitive.EXECUTION))
                 if (expressions.get(i).matchesMethodExecution(method).alwaysMatches())

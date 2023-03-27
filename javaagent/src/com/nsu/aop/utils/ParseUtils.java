@@ -3,10 +3,12 @@ package com.nsu.aop.utils;
 import com.nsu.aop.enums.AdviceType;
 import javassist.bytecode.AnnotationsAttribute;
 import javassist.bytecode.MethodInfo;
+
 import java.util.Arrays;
 
 public class ParseUtils {
     public static AdviceType parseAdviceType(String annotationString){
+
         String adviceTypeString = parseTypeName(annotationString);
 
         switch (adviceTypeString){
@@ -33,14 +35,6 @@ public class ParseUtils {
 
     public static boolean parsePointcutAnnotation(String annotationString){
         return parseTypeName(annotationString).equals("POINTCUT");
-    }
-
-    public static boolean parseCflowAnnotation(String annotationString){
-        return parseTypeName(annotationString).equals("CFLOW");
-    }
-
-    public static boolean isNeededMethod(String targetName, String methodName){
-        return targetName.contains(methodName);
     }
 
     public static String parseSimpleClassName(String className){
@@ -76,19 +70,5 @@ public class ParseUtils {
         String tmp = annotationString.substring(0, annotationString.indexOf("("));
         String[] words = tmp.split("\\.");
         return words[words.length - 1].toUpperCase();
-    }
-
-    public static String parsePackageName(String args) {
-        if (args.contains("package:")){
-            return args.replace("package:", "");
-        }
-        else{
-            System.out.println("""
-                    Provide package name as a CLI option of javaagent
-                    Proper way:
-                    -javaagent:<path to agent.jar>=package:<package name>
-                    """);
-            throw new IllegalArgumentException();
-        }
     }
 }
