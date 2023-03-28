@@ -9,7 +9,7 @@ public class PointcutBody {
 
     private final String className;
 
-    public PointcutBody(AdviceType adviceType, MethodInfo methodInfo, String className){
+    public PointcutBody(AdviceType adviceType, MethodInfo methodInfo, String className) {
         this.adviceType = adviceType;
         this.methodInfo = methodInfo;
         this.className = className;
@@ -26,4 +26,5 @@ public class PointcutBody {
     public String getClassName() {
         return className;
     }
+
 }

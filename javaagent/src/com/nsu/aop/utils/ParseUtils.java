@@ -5,10 +5,10 @@ import javassist.bytecode.AnnotationsAttribute;
 import javassist.bytecode.MethodInfo;
 
 import java.util.Arrays;
+import com.nsu.aop.models.PointcutBody;
 
 public class ParseUtils {
     public static AdviceType parseAdviceType(String annotationString){
-
         String adviceTypeString = parseTypeName(annotationString);
 
         switch (adviceTypeString){
@@ -35,6 +35,18 @@ public class ParseUtils {
 
     public static boolean parsePointcutAnnotation(String annotationString){
         return parseTypeName(annotationString).equals("POINTCUT");
+    }
+
+    public static boolean parseCflowAnnotation(String annotationString){
+        return parseTypeName(annotationString).equals("CFLOW");
+    }
+
+    public static Boolean parseCflow(String typeName){
+        return typeName.contains("Cflow");
+    }
+
+    public static boolean isNeededMethod(String targetName, String methodName){
+        return targetName.contains(methodName);
     }
 
     public static String parseSimpleClassName(String className){

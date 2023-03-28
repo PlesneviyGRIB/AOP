@@ -16,6 +16,7 @@ public class PointcutParsers {
         Set<PointcutPrimitive> supportedCall = new HashSet<>();
         supportedCall.add(PointcutPrimitive.CALL);
         supportedCall.add(PointcutPrimitive.EXECUTION);
+        supportedCall.add(PointcutPrimitive.REFERENCE);
         supportedCall.add(PointcutPrimitive.WITHIN);
 
         PointcutParser callPointcutParser = PointcutParser.getPointcutParserSupportingSpecifiedPrimitivesAndUsingContextClassloaderForResolution(supportedCall);

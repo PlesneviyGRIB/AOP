@@ -32,4 +32,4 @@ cd ../out && find ./ -type f -name "*.class" > ./csources.txt
 # "
 
 #run test with javaagent jar
-java -javaagent:../../javaagent/artifact/agent.jar com.nsu.test.Main
+java -javaagent:../../javaagent/artifact/agent.jar=package:com.nsu.test com.nsu.test.Main
