@@ -1,7 +1,7 @@
 # AOP tool
 AOP tool for Java. It is designed to implement aspect-oriented programming in Java without using AspectJ or Spring.
 AOP tool is based on mutating class methods using Javassist. Mutation is fully automated, it is only necessary to pass the name of the package in which the classes are located.
-The JAR that needs to be passed to javaagent, as well as an example of an application using the AOP tool, can be found in the ``` finalVersion``` branch. 
+The JAR that needs to be passed to javaagent, as well as an example of an application using the AOP tool, can be found in the ```finalVersion``` branch. 
 
 ##### Supported pointcuts designators:
 * execution
@@ -18,7 +18,7 @@ The JAR that needs to be passed to javaagent, as well as an example of an applic
 
 ### Usage example
 ##### Basic:
-* ``` Around``` advice
+* ```Around``` advice
     ```java
     @Around("execution(* *(..)) && within(com.nsu.test.TestClass)")
     public static Object loggingAdvice10(ProceedingJoinPoint proceedingJoinPoint) throws Exception {
@@ -33,7 +33,7 @@ The JAR that needs to be passed to javaagent, as well as an example of an applic
         return proceedingJoinPoint.invoke(args);
     }
     ```
-* ``` Before```, ``` After```, ``` Finally``` advice
+* ```Before```, ```After```, ```Finally``` advice
   ```java
     @Before("execution(* *(..)) && within(com.nsu.test.TestClass)")
     public static void loggingAdvice1(){
@@ -77,11 +77,11 @@ class MyClass{
   ```
     
 
-Also, you can download example application from ``` finalVersion``` branch
+Also, you can download example application from ```finalVersion``` branch
 
 #### Project setup
 1. Download JAR
-2. Run your app with the JAR passed to javaagent. Also, you must  specify your ``` package``` as an option for javaagent.
+2. Run your app with the JAR passed to javaagent. Also, you must  specify your ```package``` as an option for javaagent.
    ```bash
    java -javaagent:agent.jar=package:<your_package> <your_main_class>
    ```
@@ -103,4 +103,4 @@ Also, you can download example application from ``` finalVersion``` branch
     git commit -m "<commit message about changes>"
     git push origin <branch_name>
    ```
-5. Open pull request on ``` main``` branch.
+5. Open pull request on ```main``` branch.
