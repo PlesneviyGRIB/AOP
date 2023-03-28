@@ -52,7 +52,7 @@ class Aspects{
 
 @Aspect  
 class MyClass{
-    @After(Aspects.method)
+    @After("Aspects.method")
     public static void loggingAdvice1(){
         System.out.println("Before execution");
     }  
@@ -69,7 +69,7 @@ class Aspects{
 
 @Aspect  
 class MyClass{
-    @After(Aspects.method)
+    @After("Aspects.method")
     public static void loggingAdvice1(){
         System.out.println("Before execution");
     }  
