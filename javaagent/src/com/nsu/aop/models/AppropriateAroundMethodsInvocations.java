@@ -31,33 +31,32 @@ public class AppropriateAroundMethodsInvocations {
     private void parse(PointcutPrimitive pointcutPrimitive){
         for(int i = 0; i < expressions.size(); i++) {
             if (pointcutPrimitive.equals(PointcutPrimitive.CALL)) {
-                if(expressionPointcutBody.get(i).getKey().isCflow()) {
-                    if (!ToolInfo.getInstance().getIsCflow()) {
-                        this.isCflow = true;
-                        ToolInfo.getInstance().setIsCflow(true);
-                        ToolInfo.getInstance().setCflowMethodDescriptor(expressionPointcutBody.get(i));
-                    }
+                if(ToolInfo.getInstance().getIsCflow()) {
+                    addToContext(ToolInfo.getInstance().getCflowMethodDescriptor());
+                    continue;
                 }
-                else
-                    if (expressions.get(i).matchesMethodCall(method, method.getClass()).alwaysMatches())
-                        addToContext(expressionPointcutBody.get(i));
-
-                if(ToolInfo.getInstance().getIsCflow()) addToContext(ToolInfo.getInstance().getCflowMethodDescriptor());
+                if (expressions.get(i).matchesMethodCall(method, method.getClass()).alwaysMatches())
+                    registryMethod(expressionPointcutBody.get(i));
             }
 
             if (pointcutPrimitive.equals(PointcutPrimitive.EXECUTION)) {
-                if(expressionPointcutBody.get(i).getKey().isCflow()) {
-                    if (!ToolInfo.getInstance().getIsCflow()) {
-                        this.isCflow = true;
-                        ToolInfo.getInstance().setIsCflow(true);
-                        ToolInfo.getInstance().setCflowMethodDescriptor(expressionPointcutBody.get(i));
-                    }
+                if(ToolInfo.getInstance().getIsCflow()) {
+                    addToContext(ToolInfo.getInstance().getCflowMethodDescriptor());
+                    continue;
                 }
-                else
-                    if (expressions.get(i).matchesMethodExecution(method).alwaysMatches())
-                        addToContext(expressionPointcutBody.get(i));
+                if (expressions.get(i).matchesMethodExecution(method).alwaysMatches())
+                    registryMethod(expressionPointcutBody.get(i));
+            }
+        }
+    }
 
-                if(ToolInfo.getInstance().getIsCflow()) addToContext(ToolInfo.getInstance().getCflowMethodDescriptor());
+    private void registryMethod(Map.Entry<ExpressionWrapper, PointcutBody> entry){
+        addToContext(entry);
+        if(entry.getKey().isCflow()) {
+            if (!ToolInfo.getInstance().getIsCflow()) {
+                this.isCflow = true;
+                ToolInfo.getInstance().setIsCflow(true);
+                ToolInfo.getInstance().setCflowMethodDescriptor(entry);
             }
         }
     }

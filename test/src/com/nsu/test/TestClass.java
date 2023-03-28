@@ -1,17 +1,19 @@
 package com.nsu.test;
 
 public class TestClass {
-    public void A() {
-        System.out.println("+++++++++++++A BODY+++++++++++++");
-        B();
+    public void a() {
+        System.out.println("+++++ A starts");
+        b();
+        System.out.println("+++++ A ends");
     }
 
-    public void B() {
-        System.out.println("+++++++++++++B BODY+++++++++++++");
-        C();
+    public void b() {
+        System.out.println("+++++ B start");
+        c();
+        System.out.println("+++++ B ends");
     }
 
-    public void C() {
-        System.out.println("+++++++++++++C BODY+++++++++++++");
+    public void c() {
+        System.out.println("+++++ C body");
     }
 }

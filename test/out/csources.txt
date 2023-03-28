@@ -1,3 +1,6 @@
 ./com/nsu/test/TestClass1.class
+./com/nsu/test/Pointcuts.class
 ./com/nsu/test/Main.class
+./com/nsu/test/examples/TestClass.class
 ./com/nsu/test/TestClass.class
+./com/nsu/test/Aspects.class
