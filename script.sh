@@ -10,7 +10,6 @@ cd ../out && find ./ -type f -name "*.class" > ./csources.txt
 #make agent jar
 jar cmf ./../src/META-INF/MANIFEST.MF ../artifact/agent.jar @./csources.txt
 
-#echo "Java Agent jar successfully build"
 
 # ----------------------#
 

@@ -1,2 +1,3 @@
+./com/nsu/test/TestClass1.class
 ./com/nsu/test/Main.class
 ./com/nsu/test/TestClass.class
