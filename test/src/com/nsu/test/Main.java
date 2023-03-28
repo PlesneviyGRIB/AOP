@@ -1,7 +1,6 @@
 package com.nsu.test;
 
 import com.nsu.aop.annotations.*;
-import com.nsu.aop.interfaces.ProceedingJoinPoint;
 
 @Aspect
 public class Main {
