@@ -47,6 +47,8 @@ public class DynamicMethodInvocation implements ProceedingJoinPoint {
         }
         MethodInvocationUtils.invokeAll(appropriateMethodsInvocations.getFinallyInv());
 
+        appropriateMethodsInvocations.releaseCflowFlag();
+
         if(exception != null) throw exception;
 
         return result;
@@ -62,6 +64,8 @@ public class DynamicMethodInvocation implements ProceedingJoinPoint {
 
         this.aroundAdvicesChain = appropriateAroundMethodsInvocations.getAroundInv();
         this.aroundAdvicesCounter = 0;
+
+        appropriateAroundMethodsInvocations.releaseCflowFlag();
 
         return invoke(methodArgs);
     }
@@ -96,6 +100,8 @@ public class DynamicMethodInvocation implements ProceedingJoinPoint {
             exception = e;
         }
         MethodInvocationUtils.invokeAll(appropriateMethodsInvocations.getFinallyInv());
+
+        appropriateMethodsInvocations.releaseCflowFlag();
 
         if(exception != null) throw exception;
 
