@@ -41,7 +41,7 @@ The JAR that needs to be passed to javaagent, as well as an example of an applic
     }
   ```
 ##### Cflow and method reference examples:
-
+***You need to annotate classes with ```@PointcutPool``` or ```@Aspect``` annotations.***
 ###### CFlow example
   ```java
 @PointcutPool
