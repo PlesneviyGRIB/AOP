@@ -1,0 +1,2 @@
+./com/nsu/test/Main.java
+./com/nsu/test/TestClass.java
